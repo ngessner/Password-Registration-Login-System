@@ -1,6 +1,5 @@
 # **Password-Registration-Login-System**
 
-
 ### README:
 - Author: Nathan Gessner
 - Last Updated: 1/3/24
