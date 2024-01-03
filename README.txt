@@ -1,4 +1,4 @@
-# Password-Registration-Login-System
+<h1 align = "center">Password-Registration-Login-System</h1>
 
 • Author: Nathan Gessner
 • Last Updated: 1/3/24
