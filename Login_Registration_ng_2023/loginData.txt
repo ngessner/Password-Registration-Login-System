@@ -1,6 +1,0 @@
-hello|test123|ng@gmail.com|kale
-hello2|test123|ng@gmail.com|kale
-hello3|test123|ng@gmail.com|kale
-
-user1|test123|drake@gmail.com|kale
-newaccount1|password123|drake@gmail.com|kale
