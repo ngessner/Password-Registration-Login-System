@@ -1,193 +1,364 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <sstream>
+#include <math.h>
+
 using namespace std;
 
-class UserDataManagement
+class UserLoginManagement
 {
-    // requirements for the class
-    string username;
-    string password;
-    string email;
-    string question;
+    // best to keep members within a class private if possible
+private:
+    string searchUserName;
+    string searchPassWord;
+    string searchEmail;
+    string searchQuestion;
 
+    //fstream can be used based on ios state for reading and writing
     fstream file;
-
 public:
-    void login()
+    void createAccount()
     {
-        string searchName;
-        string searchPass;
-        bool accountFound = false;
+        string accountName;
+        string passWord;
+        string email;
+        string question;
+        int id = 1 + lastID("userData.txt");
 
-        system("CLS");
-        // enter data
-        cout << "Enter your Username: ";
-        getline(cin, searchName);
-        cout << "Enter your Password: ";
-        getline(cin, searchPass);
+        cout << "Enter a username: ";
+        getline(cin, accountName);
 
-        file.open("loginData.txt", ios::in);
-
-        if (file)
+        if (usernameTaken(accountName))
         {
-            while (getline(file, username, '|') &&
-                getline(file, password, '|') &&
-                getline(file, email, '|') &&
-                getline(file, question, '\n'))
-            {
+            cout << "that username isn't available." << endl;
+        }
+        else
+        {
+            cout << "Enter a password: ";
+            getline(cin, passWord);
 
-                if (searchName == username && searchPass == password)
-                {
-                    system("CLS");
-                    cout << "Login Success, Welcome!\n\n";
-                    cout << "Username: " << username << endl;;
-                    cout << "Email: " << email << endl;
-                    accountFound = true;                   
-                }
-            }
-            if (!accountFound)
+            cout << "Enter your email: ";
+            getline(cin, email);
+
+            cout << "(Security Question) What was your pets name?: ";
+            getline(cin, question);
+
+            // saves data to file as singular string to user (within saveFile, it ends the line).
+            saveFile("|" + accountName + "|" + passWord + "|" + email + "|" + question + "|", id, "userData.txt");
+        }
+    }
+
+    void accountLogin()
+    {
+        int accountID;
+        int initalID;
+        string currentData;
+
+        cout << "Enter your username: ";
+        getline(cin, searchUserName);
+
+        accountID = checkFile(1, searchUserName, currentData);
+        initalID = accountID;
+
+        if (searchUserName == currentData && accountID == initalID)
+        {
+            cout << "Enter your password: ";
+            getline(cin, searchPassWord);
+
+            if (isValidInput(2, initalID, searchPassWord))
             {
                 system("CLS");
-                cout << "incorrect password, try again\n";
+                cout << "Welcome " << searchUserName << "!" << endl << endl;
+
+                displayUserData(3, "Email: ");
+                displayUserData(4, "Your favorite pet!: ");
+            }
+            else
+            {
+                cout << "Password incorrect" << endl;
             }
         }
         else
         {
-            cout << "unable to open file\n";
+            cout << "Username not found" << endl;
         }
-        file.close();
-    }
-   
-    void createAccount()
-    {        
-        file.open("loginData.txt", ios::out | ios::app);
-
-        system("CLS");
-
-        cout << "Enter your Username: ";
-        getline(cin, username);
-        cout << "Enter your Password: ";
-        getline(cin, password);
-        cout << "Enter your email: ";
-        getline(cin, email);
-        cout << "(Security Question) What was your pets name?: ";
-        getline(cin, question);
-
-        if (file)
-        {
-            file << username << "|" << password << "|" << email << "|" << question << endl;
-        }
-        file.close();
     }
 
     void forgotPassword()
     {
-        string searchName;
-        string searchEmail;
-        string searchQuestion;
+        int accountID;
+        int initalID;
+        string currentData;
         string newPassword;
-        ofstream replacementFile;
 
-        system("CLS");
         cout << "Enter your username: ";
-        getline(cin, searchName);
-        cout << "Enter your email: ";
-        getline(cin, searchEmail);
-        cout << "(Security Question) What was your pets name?: ";
-        getline(cin, searchQuestion);
+        getline(cin, searchUserName);
 
-        replacementFile.open("tempFile.txt");
-        file.open("loginData.txt", ios::in);
+        accountID = checkFile(1, searchUserName, currentData);
+        initalID = accountID;
 
-        if (file)
+        if (searchUserName == currentData && accountID == initalID)
         {
-            while (getline(file, username, '|') &&
-                getline(file, password, '|') &&
-                getline(file, email, '|') &&
-                getline(file, question, '\n'))
+            cout << "Enter your email: ";
+            getline(cin, searchEmail);
+
+            if (isValidInput(3, initalID, searchEmail))
             {
-                if (searchName == username && searchEmail == email && searchQuestion == question)
+                cout << "(Security Question) What was your pets name?: ";
+                getline(cin, searchQuestion);
+
+                if (isValidInput(4, initalID, searchQuestion))
                 {
                     system("CLS");
+
                     cout << "Enter a new password: ";
                     getline(cin, newPassword);
 
-                    password = newPassword;
-                    replacementFile << username << "|" << password << "|" << email << "|" << question << "\n";
-
-                    cout << "your new password is: " << password << endl;
+                    replacePassword(newPassword);
                 }
-                else
-                {                    
-                    //adds remaining lines to replacement
-                    replacementFile << username << "|" << password << "|" << email << "|" << question << "\n";
-                }
+            }
+            else
+            {
+                cout << "Email not found:" << endl;
             }
         }
         else
         {
-            cout << "unable to open file\n";
+            cout << "Username not found" << endl;
+        }
+    }
+
+    void replacePassword(string newPass)
+    {
+        ifstream inFile("userData.txt");
+        ofstream tempFile("tempFile.txt");
+        string line;
+        string currentChar;
+        string oldPass;
+        long long eChar = 0;
+        int id = 0;
+
+        checkFile(2, searchUserName, oldPass);
+
+        while (inFile >> currentChar)
+        {
+            if (currentChar.find("ID:") != string::npos)
+            {
+                size_t startPos = line.find(oldPass);
+                if (startPos != string::npos)
+                {
+                    line.replace(startPos, oldPass.length(), newPass);
+
+                    id = 1 + lastID("tempFile.txt");
+                    saveFile(line, id, "tempFile.txt");
+                }
+                else
+                {
+                    id = 1 + lastID("tempFile.txt");
+                    saveFile(line, id, "tempFile.txt");
+                }
+                line.clear();
+            }
+            else
+            {
+                istringstream(currentChar) >> eChar;
+                line += (char)decrypt(eChar);
+                currentChar.clear();
+            }
+        }
+        tempFile.close();
+        inFile.close();
+
+        remove("userData.txt");
+        rename("tempFile.txt", "userData.txt");
+    }
+
+    bool isValidInput(const int dataID, int initialID, string attempt)
+    {
+        string currentData;
+        int accountID;
+
+        accountID = checkFile(dataID, attempt, currentData);
+
+        if (attempt == currentData && accountID == initialID)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    void displayUserData(const int dataID, string text)
+    {
+        string currentData;
+
+        checkFile(dataID, searchUserName, currentData);
+
+        cout << text << "" << currentData << endl;
+    }
+
+    bool usernameTaken(string accountName)
+    {
+        string currentData;
+
+        int accountID = checkFile(1, accountName, currentData);       
+
+        if (accountID != 0)
+        {
+            return true;
+        }
+        else if (accountID == 0)
+        {
+            return false;
+        }
+    }
+
+    void saveFile(string line, const int accountID, string fileName)
+    {
+        file.open(fileName, ios::out | ios::app);
+        file.seekg(0, ios::end);
+
+        if (file.tellg() != 0)
+        {
+            file << endl;
+        }
+
+        file.seekg(0, ios::beg);
+
+        if (file.is_open())
+        {
+            for (int i = 0; i < line.length(); i++)
+            {
+                file << encrypt(line[i]);
+                file << endl;
+            }
+           
+            file << "ID:" << accountID;
         }
 
         file.close();
-        replacementFile.close();
+    }
 
-        remove("loginData.txt");
-        rename("tempFile.txt", "loginData.txt");
+    int checkFile(const int dataID, string attempt, string& currentData)
+    {
+        string currentChar;
+        string line;
+        int currentDataID = 0;
+        int accountID = 0;
+        long long eChar;
+
+        file.open("userData.txt", ios::in);
+
+        if (dataID > 4 || dataID <= 0)
+        {
+            cout << "non existant ID" << endl;
+            file.close();
+            return 0;
+        }
+
+        while (file >> currentChar)
+        {
+            if (currentChar.find("ID:") != string::npos)
+            {
+                if (line.find(attempt) != string::npos)
+                {
+                    file.close();
+                    currentChar.erase(0, 3);
+                    istringstream(currentChar) >> accountID;
+
+                    for (int i = 0; i < line.length(); i++)
+                    {
+                        if (line[i] == '|')
+                        {
+                            currentDataID++;
+                        }
+                        if (currentDataID >= dataID && currentDataID < dataID + 1)
+                        {
+                            currentData += line[i];
+                        }
+                    }
+                    // erase the first delimiter                    
+                    currentData.erase(0, 1);
+                    return accountID;
+                }
+                else
+                {
+                    line.clear();
+                }
+            }
+            else
+            {
+                istringstream(currentChar) >> eChar;
+                line += (char)decrypt(eChar);
+                currentChar.clear();
+                accountID = 0;
+            }
+        }
+        if (file.peek() == EOF)
+        {
+            file.close();
+            return accountID;
+        }
+    }
+
+    int lastID(string fileName)
+    {
+        string searchId;
+        string userId;
+        int id;
+
+        file.open(fileName, ios::in);
+        file.seekg(0, ios::end);
+
+        if (file.tellg() == 0)
+        {
+            id = 0;
+            file.close();
+            return id;
+        }
+
+        file.seekg(0, ios::beg);
+
+        while (getline(file, searchId))
+        {
+            size_t pos = searchId.find('I');
+
+            if (pos != string::npos)
+            {
+                userId = searchId;
+            }
+        }
+
+        file.close();
+        userId.erase(0, 3);
+
+        istringstream(userId) >> id;
+        return id;
+    }
+
+    long long encrypt(int letter)
+    {
+        return powf(letter, 6) * 3 - 10;
+    }
+
+    int decrypt(long long letter)
+    {
+        return powf((letter + 10) / 3, 1 / 6.f);
     }
 };
 
-#pragma region Protoypes
-
-char showMenu();
-
-#pragma endregion Protoypes
-
-int main()
-{
-    UserDataManagement userManagerObj;
-    bool validated = false;    
-
-    while (!validated)
-    {
-        switch (showMenu())
-        {
-        case '1':
-            userManagerObj.login();
-            validated = true;
-            break;
-
-        case '2':
-            userManagerObj.createAccount();
-            validated = true;
-            break;
-
-        case '3':
-            userManagerObj.forgotPassword();
-            validated = true;
-            break;
-
-        case '4':
-            cout << "exiting program\n";
-            validated = true;
-            break;
-
-        default:
-            system("CLS");
-            cout << "Invalid Selection, try again\n\n";            
-            break;
-        }
-    }    
-}
-
 char showMenu()
-{    
+{   
     char selection;
+
+    cout << "Nathan Gessner 2024: Login and Regsistration Program" << endl << endl;
 
     cout << "1 - Login\n";
     cout << "2 - Create Account\n";
-    cout << "3 - Forgot Username or Password\n"; 
+    cout << "3 - Forgot Username or Password\n";
     cout << "4 - Exit\n";
 
     cout << "Selection: ";
@@ -196,3 +367,62 @@ char showMenu()
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
     return selection;
 }
+
+int main()
+{
+    ofstream outFile("userData.txt");
+    UserLoginManagement loginManagerObj;
+
+    bool validated = false;
+    if (outFile.is_open())
+    {
+        outFile.close();
+
+        while (!validated)
+        {
+            switch (showMenu())
+            {
+            case '1':
+                system("CLS");
+                loginManagerObj.accountLogin();
+                validated = true;
+                break;
+
+            case '2':
+                system("CLS");
+                loginManagerObj.createAccount();
+                validated = true;
+                break;
+
+            case '3':
+                system("CLS");
+                loginManagerObj.forgotPassword();
+                validated = true;
+                break;
+
+            case '4':
+                system("CLS");
+                cout << "exiting program" << endl;
+                validated = true;
+                break;
+
+            default:
+                system("CLS");
+                cout << "Invalid Selection, try again" << endl << endl;
+                break;
+            }
+        }
+    }  
+    else
+    {
+        cout << "Error opening file" << endl;
+    }
+
+}
+
+// The purpose of this program is to use only one text file to login encrypt data, while also not storing info within the program.
+// The users info is found through an ID system associated with each account, one the user enters correct data, the program searches 
+// the database for that ID. It then associates each key data with a dataID, which is how we can determine what to compare without directly
+// storing it. 
+
+// there is redundant code, but this was more of a freestyle skills practice project. So im sure theres redundant code. Thank you for reading!
