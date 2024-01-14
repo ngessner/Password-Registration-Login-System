@@ -181,17 +181,11 @@ public:
         checkFile(dataID, attempt, currentData);
 
         if (attempt == currentData && accountID == initialID)
-        {
-            cout << attempt << endl;
-            cout << currentData << endl;
+        {            
             return true;
         }
         else
-        {
-            cout << accountID << endl;
-            cout << initialID << endl;
-            cout << attempt << endl;
-            cout << currentData << endl;
+        {          
             return false;
         }
     }
@@ -273,9 +267,6 @@ public:
                     file.close();
                     currentChar.erase(0, 3);
                     istringstream(currentChar) >> accountID;
-
-                    //cout << line << endl;
-
 
                     for (int i = 0; i < line.length(); i++)
                     {
