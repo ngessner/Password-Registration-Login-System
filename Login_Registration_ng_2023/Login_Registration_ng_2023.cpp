@@ -204,7 +204,7 @@ public:
     {
         string currentData;
 
-        int accountID = checkFile(1, accountName, currentData);       
+        int accountID = checkFile(1, accountName, currentData);
 
         if (accountID != 0)
         {
@@ -235,7 +235,7 @@ public:
                 file << encrypt(line[i]);
                 file << endl;
             }
-           
+
             file << "ID:" << accountID;
         }
 
@@ -351,7 +351,7 @@ public:
 };
 
 char showMenu()
-{   
+{
     char selection;
 
     cout << "Nathan Gessner 2024: Login and Regsistration Program" << endl << endl;
@@ -367,55 +367,63 @@ char showMenu()
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
     return selection;
 }
-
-int main()
+void checkFileExists()
 {
-    ofstream outFile("userData.txt");
-    UserLoginManagement loginManagerObj;
+    char filename[] = "userData.txt";
+    fstream fileChecker;
 
-    bool validated = false;
-    if (outFile.is_open())
+    fileChecker.open(filename, std::fstream::in | std::fstream::out | std::fstream::app);
+
+    // If file does not exist, Create new file
+    if (!fileChecker)
     {
-        outFile.close();
-
-        while (!validated)
-        {
-            switch (showMenu())
-            {
-            case '1':
-                system("CLS");
-                loginManagerObj.accountLogin();
-                validated = true;
-                break;
-
-            case '2':
-                system("CLS");
-                loginManagerObj.createAccount();
-                validated = true;
-                break;
-
-            case '3':
-                system("CLS");
-                loginManagerObj.forgotPassword();
-                validated = true;
-                break;
-
-            case '4':
-                system("CLS");
-                cout << "exiting program" << endl;
-                validated = true;
-                break;
-
-            default:
-                system("CLS");
-                cout << "Invalid Selection, try again" << endl << endl;
-                break;
-            }
-        }
-    }  
+        fileChecker.open(filename, fstream::in | fstream::out | fstream::trunc);
+        fileChecker.close();
+    }
     else
     {
-        cout << "Error opening file" << endl;
+        fileChecker.close();
     }
 
+}
+int main()
+{
+    UserLoginManagement loginManagerObj;
+    bool validated = false;
+    checkFileExists();
+
+    while (!validated)
+    {
+        switch (showMenu())
+        {
+        case '1':
+            system("CLS");
+            loginManagerObj.accountLogin();
+            validated = true;
+            break;
+
+        case '2':
+            system("CLS");
+            loginManagerObj.createAccount();
+            validated = true;
+            break;
+
+        case '3':
+            system("CLS");
+            loginManagerObj.forgotPassword();
+            validated = true;
+            break;
+
+        case '4':
+            system("CLS");
+            cout << "Exiting program" << endl;
+            validated = true;
+            break;
+
+        default:
+            system("CLS");
+            cout << "Invalid Selection, try again" << endl << endl;
+            break;
+        }
+    }
 }
