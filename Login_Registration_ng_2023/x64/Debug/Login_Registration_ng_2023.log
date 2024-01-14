@@ -1,8 +1,8 @@
 ﻿  Login_Registration_ng_2023.cpp
-C:\Users\ngess\OneDrive\Desktop\Login_Registration_ng_2023\Login_Registration_ng_2023\Login_Registration_ng_2023.cpp(344,21): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\ngess\OneDrive\Desktop\Login_Registration_ng_2023\Login_Registration_ng_2023\Login_Registration_ng_2023.cpp(344,36): warning C4244: 'return': conversion from 'float' to '__int64', possible loss of data
-C:\Users\ngess\OneDrive\Desktop\Login_Registration_ng_2023\Login_Registration_ng_2023\Login_Registration_ng_2023.cpp(349,35): warning C4244: 'argument': conversion from '__int64' to 'float', possible loss of data
-C:\Users\ngess\OneDrive\Desktop\Login_Registration_ng_2023\Login_Registration_ng_2023\Login_Registration_ng_2023.cpp(349,20): warning C4244: 'return': conversion from 'float' to 'int', possible loss of data
-C:\Users\ngess\OneDrive\Desktop\Login_Registration_ng_2023\Login_Registration_ng_2023\Login_Registration_ng_2023.cpp(305): warning C4715: 'UserLoginManagement::checkFile': not all control paths return a value
-C:\Users\ngess\OneDrive\Desktop\Login_Registration_ng_2023\Login_Registration_ng_2023\Login_Registration_ng_2023.cpp(217): warning C4715: 'UserLoginManagement::usernameTaken': not all control paths return a value
-  Login_Registration_ng_2023.vcxproj -> C:\Users\ngess\OneDrive\Desktop\Login_Registration_ng_2023\x64\Debug\Login_Registration_ng_2023.exe
+C:\Users\ngess\OneDrive\Desktop\don del\Login_Registration_ng_2023\Login_Registration_ng_2023.cpp(352,21): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\ngess\OneDrive\Desktop\don del\Login_Registration_ng_2023\Login_Registration_ng_2023.cpp(352,36): warning C4244: 'return': conversion from 'float' to '__int64', possible loss of data
+C:\Users\ngess\OneDrive\Desktop\don del\Login_Registration_ng_2023\Login_Registration_ng_2023.cpp(357,35): warning C4244: 'argument': conversion from '__int64' to 'float', possible loss of data
+C:\Users\ngess\OneDrive\Desktop\don del\Login_Registration_ng_2023\Login_Registration_ng_2023.cpp(357,20): warning C4244: 'return': conversion from 'float' to 'int', possible loss of data
+C:\Users\ngess\OneDrive\Desktop\don del\Login_Registration_ng_2023\Login_Registration_ng_2023.cpp(313): warning C4715: 'UserLoginManagement::checkFile': not all control paths return a value
+C:\Users\ngess\OneDrive\Desktop\don del\Login_Registration_ng_2023\Login_Registration_ng_2023.cpp(222): warning C4715: 'UserLoginManagement::usernameTaken': not all control paths return a value
+  Login_Registration_ng_2023.vcxproj -> C:\Users\ngess\OneDrive\Desktop\don del\x64\Debug\Login_Registration_ng_2023.exe

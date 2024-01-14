@@ -66,7 +66,7 @@ public:
             cout << "Enter your password: ";
             getline(cin, searchPassWord);
 
-            if (isValidInput(2, initalID, searchPassWord))
+            if (isValidInput(2, initalID, accountID, searchPassWord))
             {
                 system("CLS");
                 cout << "Welcome " << searchUserName << "!" << endl << endl;
@@ -103,12 +103,12 @@ public:
             cout << "Enter your email: ";
             getline(cin, searchEmail);
 
-            if (isValidInput(3, initalID, searchEmail))
+            if (isValidInput(3, initalID, accountID, searchEmail))
             {
                 cout << "(Security Question) What was your pets name?: ";
                 getline(cin, searchQuestion);
 
-                if (isValidInput(4, initalID, searchQuestion))
+                if (isValidInput(4, initalID, accountID, searchQuestion))
                 {
                     system("CLS");
 
@@ -174,19 +174,24 @@ public:
         rename("tempFile.txt", "userData.txt");
     }
 
-    bool isValidInput(const int dataID, int initialID, string attempt)
+    bool isValidInput(const int dataID, int initialID, int accountID,string attempt)
     {
-        string currentData;
-        int accountID;
+        string currentData;        
 
-        accountID = checkFile(dataID, attempt, currentData);
+        checkFile(dataID, attempt, currentData);
 
         if (attempt == currentData && accountID == initialID)
         {
+            cout << attempt << endl;
+            cout << currentData << endl;
             return true;
         }
         else
         {
+            cout << accountID << endl;
+            cout << initialID << endl;
+            cout << attempt << endl;
+            cout << currentData << endl;
             return false;
         }
     }
@@ -268,6 +273,9 @@ public:
                     file.close();
                     currentChar.erase(0, 3);
                     istringstream(currentChar) >> accountID;
+
+                    //cout << line << endl;
+
 
                     for (int i = 0; i < line.length(); i++)
                     {
