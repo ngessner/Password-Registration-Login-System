@@ -419,10 +419,3 @@ int main()
     }
 
 }
-
-// The purpose of this program is to use only one text file to login encrypt data, while also not storing info within the program.
-// The users info is found through an ID system associated with each account, one the user enters correct data, the program searches 
-// the database for that ID. It then associates each key data with a dataID, which is how we can determine what to compare without directly
-// storing it. 
-
-// there is redundant code, but this was more of a freestyle skills practice project. So im sure theres redundant code. Thank you for reading!
