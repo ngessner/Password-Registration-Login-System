@@ -68,6 +68,7 @@ public:
 
             if (isValidInput(2, initalID, accountID, searchPassWord))
             {
+                cout << initalID << endl;
                 system("CLS");
                 cout << "Welcome " << searchUserName << "!" << endl << endl;
 
@@ -174,18 +175,18 @@ public:
         rename("tempFile.txt", "userData.txt");
     }
 
-    bool isValidInput(const int dataID, int initialID, int accountID,string attempt)
+    bool isValidInput(const int dataID, int initialID, int accountID, string attempt)
     {
-        string currentData;        
+        string currentData;
 
-        checkFile(dataID, attempt, currentData);
+        accountID = checkFile(dataID, attempt, currentData);
 
         if (attempt == currentData && accountID == initialID)
-        {            
+        {
             return true;
         }
         else
-        {          
+        {
             return false;
         }
     }
